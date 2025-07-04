@@ -1,0 +1,54 @@
+<launch>
+  <!-- Launch Gazebo with UR10e -->
+  <include file="$(find ur_gazebo)/launch/ur10e_world.launch">
+    <arg name="limited" value="false"/>
+    <arg name="paused" value="false"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Launch RealSense camera (simulated) -->
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <arg name="filters" value="pointcloud"/>
+    <arg name="enable_color" value="true"/>
+    <arg name="enable_depth" value="true"/>
+    <arg name="enable_pointcloud" value="true"/>
+  </include>
+
+  <!-- Launch MoveIt for UR10e -->
+  <include file="$(find ur10_moveit_config)/launch/ur10_moveit_planning_execution.launch">
+    <arg name="limited" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Launch MoveIt RViz -->
+  <include file="$(find ur10_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" value="true"/>
+  </include>
+
+  <!-- Launch object detection node -->
+  <node name="object_detector" pkg="freshfleet_detection" type="object_detector.py" output="screen">
+    <param name="detection_threshold" value="1000"/>
+    <param name="debug_mode" value="true"/>
+  </node>
+
+  <!-- Launch robot controller node -->
+  <node name="robot_controller" pkg="freshfleet_detection" type="robot_controller.py" output="screen">
+    <param name="max_velocity" value="0.3"/>
+    <param name="max_acceleration" value="0.3"/>
+    <param name="planning_time" value="5.0"/>
+  </node>
+
+  <!-- Launch RViz for visualization -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find freshfleet_detection)/config/freshfleet.rviz" output="screen"/>
+
+  <!-- Static transform publisher for camera mount (adjust as needed) -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="camera_mount_tf" 
+        args="0.5 0.0 0.8 0 0 0 base_link camera_mount"/>
+
+  <!-- Static transform publisher for camera (adjust as needed) -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="camera_tf" 
+        args="0.0 0.0 0.0 0 0 0 camera_mount camera_color_optical_frame"/>
+
+</launch> 

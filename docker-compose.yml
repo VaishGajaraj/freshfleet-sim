@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  freshfleet-ros:
+    build: .
+    container_name: freshfleet-ros
+    environment:
+      - DISPLAY=${DISPLAY:-host.docker.internal:0}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./src:/root/catkin_ws/src:rw
+      - ros_logs:/root/.ros/log
+    network_mode: host
+    stdin_open: true
+    tty: true
+    # Uncomment the following lines to use real hardware
+    # devices:
+    #   - "/dev/video0:/dev/video0"
+    #   - "/dev/video1:/dev/video1"
+    #   - "/dev/video2:/dev/video2"
+    # privileged: true
+
+volumes:
+  ros_logs: 
