@@ -79,3 +79,4 @@ htmlcov/
 
 # ROS bag files (uncomment if you don't want to track them)
 # *.bag
+data/mess_unclassified/

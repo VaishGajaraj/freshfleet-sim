@@ -28,7 +28,7 @@ RUN . /opt/ros/noetic/setup.sh && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
       ros-noetic-ur-gazebo ros-noetic-ur-description \
-      ros-noetic-universal-robot \
+      ros-noetic-ur-robot-driver \
       ros-noetic-realsense2-camera ros-noetic-realsense2-description \
       ros-noetic-moveit \
       && rm -rf /var/lib/apt/lists/*
